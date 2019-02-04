@@ -1,7 +1,8 @@
 #!/usr/bin/python3
+
 import json
 import os
-import random
+import time
 from datetime import datetime
 from typing import Tuple
 
@@ -54,8 +55,7 @@ def get_request_params(
         'content-type': 'application/json+protobuf',
     }
 
-    # TODO: find how to generate a non-existing id, instead of generating a random one
-    id = random.randint(0, 10e10)
+    id = time.time()  # the reminder id is the unix time at which it was created
     reminder_id = f'cli-reminder-{id}'
 
     # The structure of the dictionary was extracted from a browser request to
