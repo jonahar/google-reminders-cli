@@ -1,9 +1,10 @@
+import argparse
 import json
 import os
 import time
-from datetime import datetime
 from typing import Tuple
 
+import dateparser
 import httplib2
 from oauth2client import tools
 from oauth2client.client import OAuth2WebServerFlow
@@ -13,6 +14,15 @@ APP_KEYS_FILE = 'app_keys.json'
 USER_OAUTH_DATA_FILE = os.path.expanduser('~/.google-reminders-cli-oauth')
 
 HTTP_OK = 200
+WEEKDAYS = {
+    0: 'Monday',
+    1: 'Tuesday',
+    2: 'Wednesday',
+    3: 'Thursday',
+    4: 'Friday',
+    5: 'Saturday',
+    6: 'Sunday',
+}
 
 
 def authenticate() -> httplib2.Http:
@@ -40,7 +50,7 @@ def authenticate() -> httplib2.Http:
     return auth_http
 
 
-def get_request_params(
+def build_request_params(
     title: str, year: int, month: int, day: int, hour: int, minute: int,
 ) -> Tuple[dict, dict]:
     """
@@ -87,46 +97,85 @@ def get_request_params(
     return headers, data
 
 
-def parse_date(date_str: str) -> Tuple[int, int, int, int, int]:
+def read_yes_no(prompt) -> bool:
     """
-    extract the date and time from the given date representation string
-
-    :return: (year, month, day, hour, minute)
+    read yes no answer from the user. default (empty answer) is yes
     """
-    supported_formats = [
-        '%Y:%m:%d %H:%M', '%Y%m%d %H%M', '%Y%m%d %H:%M',
-    ]
-    for fmt in supported_formats:
-        try:
-            dt = datetime.strptime(date_str, fmt)
-            return dt.year, dt.month, dt.day, dt.hour, dt.minute
-        except ValueError:
-            pass
-    raise ValueError('Invalid date format')
+    ans = input(f'{prompt} [Y/n] ').lower()
+    if ans in ['', 'y', 'yes']:
+        return True
+    else:
+        return False
 
 
 def read_reminder_params():
-    title = input('Enter reminder title: ')
-    date_str = input('Enter time (yyyy:mm:dd HH:MM): ')
-    year, month, day, hour, minute = parse_date(date_str)
-    return get_request_params(title, year, month, day, hour, minute)
+    """
+    :return: (headers, data), or None (meaning to action required)
+    """
+    title = input('What\'s the reminder: ')
+    date_str = input('When do you want to be reminded: ')
+    dt = dateparser.parse(date_str)
+    if dt is None:
+        print('Unrecognizable time text')
+        return
+    weekday = WEEKDAYS[dt.weekday()]
+
+    print(
+        f'\n"{title}" on {weekday}, {dt.year}-{dt.month}-{dt.day} '
+        f'at {str(dt.hour).zfill(2)}:{str(dt.minute).zfill(2)}\n'
+    )
+    save = read_yes_no('Do you want to save this?')
+    if save:
+        return build_request_params(title, dt.year, dt.month, dt.day, dt.hour, dt.minute)
+
+
+usage = '''
+Simply enter your reminder and the time at which you want to be reminded:
+    $ remind
+    What's the reminder: Pay bills
+    When do you want to be reminded: tomorrow at 4pm
+    
+The time text can be in many formats such as
+    * In 2 days at 14:56
+    * in 5 days at 9am
+    * Mar 6 at 7pm
+    * Sunday the 17th, 2:30pm
+    * tomorrow
+    * today at 19:00
+    * 2019-05-25 10:42
+'''
+
+
+def parse_args():
+    """
+    parse and return the program arguments
+    """
+    parser = argparse.ArgumentParser(description='Google reminders cli',
+                                     epilog=usage,
+                                     formatter_class=argparse.RawTextHelpFormatter)
+    return parser.parse_args()
 
 
 def main():
+    parse_args()  # handles the help menu
     auth_http = authenticate()
-    headers, data = read_reminder_params()
-    response, content = auth_http.request(
-        uri='https://reminders-pa.clients6.google.com/v1internalOP/reminders/create',
-        method='POST',
-        body=json.dumps(data),
-        headers=headers,
-    )
-    if response.status == HTTP_OK:
-        print('Reminder set successfully')
+    params = read_reminder_params()
+    if params:
+        headers, data = params
+        response, content = auth_http.request(
+            uri='https://reminders-pa.clients6.google.com/v1internalOP/reminders/create',
+            method='POST',
+            body=json.dumps(data),
+            headers=headers,
+        )
+        if response.status == HTTP_OK:
+            print('Reminder set successfully')
+        else:
+            print('Error while trying to set a reminder:')
+            print(f'    status code - {response.status}')
+            print(f'    {content}')
     else:
-        print('Error while trying to set a reminder:')
-        print(f'    status code - {response.status}')
-        print(f'    {content}')
+        print('Reminder was not saved')
 
 
 if __name__ == '__main__':
