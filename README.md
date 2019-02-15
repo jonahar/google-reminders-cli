@@ -6,12 +6,16 @@ date, and is done interactively:
 
 ```
 $ ./remind 
-Enter reminder title: Create Github repository for google-reminders-cli
-Enter time (yyyy:mm:dd HH:MM): 2019:02:01 14:00            
+What's the reminder: Pay bills
+When do you want to be reminded: tomorrow at 4pm
+
+"Pay bills" on Saturday, 2019-2-16 at 16:00
+
+Do you want to save this? [Y/n] y
 Reminder set successfully
 ```
 
-Currently there is no official support for reminders in Google API, so instead this 
+Currently there is no official support for reminders in Google API, so instead, this 
 tool imitates a browser request.  
 App API keys are provided in a separate file and you may either use them or change them with 
 your own keys.
