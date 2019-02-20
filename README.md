@@ -15,6 +15,8 @@ Do you want to save this? [Y/n] y
 Reminder set successfully
 ```
 
+Run `remind -h` to see additional acceptable time formats
+
 Currently there is no official support for reminders in Google API, so instead, this 
 tool imitates a browser request.  
 App API keys are provided in a separate file and you may either use them or change them with 
