@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import readline  # to enable navigating through entered text
 import time
 from typing import Tuple
 
