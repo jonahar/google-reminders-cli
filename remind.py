@@ -15,15 +15,6 @@ APP_KEYS_FILE = 'app_keys.json'
 USER_OAUTH_DATA_FILE = os.path.expanduser('~/.google-reminders-cli-oauth')
 
 HTTP_OK = 200
-WEEKDAYS = {
-    0: 'Monday',
-    1: 'Tuesday',
-    2: 'Wednesday',
-    3: 'Thursday',
-    4: 'Friday',
-    5: 'Saturday',
-    6: 'Sunday',
-}
 
 
 def authenticate() -> httplib2.Http:
@@ -63,10 +54,10 @@ def build_request_params(
     headers = {
         'content-type': 'application/json+protobuf',
     }
-
+    
     id = time.time()  # the reminder id is the unix time at which it was created
     reminder_id = f'cli-reminder-{id}'
-
+    
     # The structure of the dictionary was extracted from a browser request to
     # create a new reminder. I didn't find any official documentation
     # for the request parameters.
@@ -114,17 +105,15 @@ def read_reminder_params():
     :return: (headers, data), or None (meaning to action required)
     """
     title = input('What\'s the reminder: ')
-    date_str = input('When do you want to be reminded: ')
-    dt = dateparser.parse(date_str)
+    dt = dateparser.parse(input('When do you want to be reminded: '))
     if dt is None:
         print('Unrecognizable time text')
         return
-    weekday = WEEKDAYS[dt.weekday()]
-
-    print(
-        f'\n"{title}" on {weekday}, {dt.year}-{dt.month}-{dt.day} '
-        f'at {str(dt.hour).zfill(2)}:{str(dt.minute).zfill(2)}\n'
-    )
+    
+    # format is  "Fri, May 23 2019, 19:30"
+    date_str = dt.strftime('%a, %b %d %Y, %H:%M')
+    print(f'\n"{title}" on {date_str}\n')
+    
     save = read_yes_no('Do you want to save this?')
     if save:
         return build_request_params(title, dt.year, dt.month, dt.day, dt.hour, dt.minute)
