@@ -9,13 +9,15 @@ $ ./remind
 What's the reminder: Pay bills
 When do you want to be reminded: tomorrow at 4pm
 
-"Pay bills" on Saturday, 2019-2-16 at 16:00
+"Pay bills" on Fri, May 10 2019, 16:00
 
 Do you want to save this? [Y/n] y
 Reminder set successfully
 ```
 
 Run `remind -h` to see additional acceptable time formats
+
+On the first run, a consent screen will open in the browser to aquire permission to access the user's reminders.
 
 Currently there is no official support for reminders in Google API, so instead, this 
 tool imitates a browser request.  
