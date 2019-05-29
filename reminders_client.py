@@ -1,4 +1,5 @@
 import json
+from typing import List
 
 import reminders_client_utils as client_utils
 from reminder import Reminder
@@ -7,6 +8,7 @@ URIs = {
     'create': 'https://reminders-pa.clients6.google.com/v1internalOP/reminders/create',
     'delete': 'https://reminders-pa.clients6.google.com/v1internalOP/reminders/delete',
     'get': 'https://reminders-pa.clients6.google.com/v1internalOP/reminders/get',
+    'list': 'https://reminders-pa.clients6.google.com/v1internalOP/reminders/list'
 }
 
 HEADERS = {
@@ -76,3 +78,26 @@ class RemindersClient:
         else:
             self._report_error(response, content, 'delete_reminder')
             return False
+    
+    def list_reminders(self, num_reminders: int) -> List[Reminder]:
+        """
+        returns a list of the last REMINDERS_LIST_MAX_LEN created reminders, or
+        None if an error occurred
+        """
+        response, content = self.auth_http.request(
+            uri=URIs['list'],
+            method='POST',
+            body=client_utils.list_req_body(num_reminders=num_reminders),
+            headers=HEADERS,
+        )
+        if response.status == HTTP_OK:
+            content_dict = json.loads(content.decode("utf-8"))
+            reminders_dict_list = content_dict['1']
+            reminders = [
+                client_utils.build_reminder(reminder_dict)
+                for reminder_dict in reminders_dict_list
+            ]
+            return reminders
+        else:
+            self._report_error(response, content, 'list_reminders')
+            return None

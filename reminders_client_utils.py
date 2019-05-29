@@ -85,6 +85,19 @@ def delete_req_body(reminder_id: str):
     return json.dumps(body)
 
 
+def list_req_body(num_reminders: int):
+    """
+    returns the body of a list-reminders request
+    
+    :param num_reminders: the number of reminders to retrieve
+    """
+    body = {
+        "5": 1,  # boolean field. 0 or 1
+        "6": num_reminders,  # number of reminders to retrieve
+    }
+    return json.dumps(body)
+
+
 def build_reminder(reminder_dict: dict):
     r = reminder_dict
     try:
