@@ -1,6 +1,7 @@
 import httplib2
 import json
 import os
+from datetime import datetime
 from oauth2client import tools
 from oauth2client.client import OAuth2WebServerFlow
 from oauth2client.file import Storage
@@ -66,3 +67,42 @@ def create_req_body(reminder: Reminder) -> dict:
         }
     }
     return json.dumps(body)
+
+
+def get_req_body(reminder_id: str):
+    """
+    returns the body of a get-reminder request
+    """
+    body = {'2': [{'2': reminder_id}]}
+    return json.dumps(body)
+
+
+def delete_req_body(reminder_id: str):
+    """
+    returns the body of a delete-reminder request
+    """
+    body = {'2': [{'2': reminder_id}]}
+    return json.dumps(body)
+
+
+def build_reminder(reminder_dict: dict):
+    r = reminder_dict
+    try:
+        id = r['1']['2']
+        title = r['3']
+        year = r['5']['1']
+        month = r['5']['2']
+        day = r['5']['3']
+        hour = r['5']['4']['1']
+        minute = r['5']['4']['2']
+        second = r['5']['4']['3']
+        
+        return Reminder(
+            title=title,
+            dt=datetime(year, month, day, hour, minute, second),
+            id=id,
+        )
+    
+    except KeyError:
+        print('build_reminder failed: unrecognized reminder dictionary format')
+        return None
