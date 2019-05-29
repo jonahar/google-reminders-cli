@@ -1,11 +1,11 @@
 # google-reminders-cli
 
 This is a simple tool for creating Google reminders from the command line.
-The only supported feature is creating a single reminder in a specified time and 
+Currently, the only supported feature is creating a single reminder in a specified time and 
 date, and is done interactively:
 
 ```
-$ ./remind 
+$ python3 remind.py 
 What's the reminder: Pay bills
 When do you want to be reminded: tomorrow at 4pm
 
@@ -15,7 +15,7 @@ Do you want to save this? [Y/n] y
 Reminder set successfully
 ```
 
-Run `remind -h` to see additional acceptable time formats
+Run with `-h` flag to see additional acceptable time formats
 
 On the first run, a consent screen will open in the browser to aquire permission to access the user's reminders.
 
