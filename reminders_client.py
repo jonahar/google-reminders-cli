@@ -1,5 +1,5 @@
 import json
-from typing import List
+from typing import List, Union
 
 import reminders_client_utils as client_utils
 from reminder import Reminder
@@ -45,7 +45,7 @@ class RemindersClient:
             self._report_error(response, content, 'create_reminder')
             return False
     
-    def get_reminder(self, reminder_id: str) -> Reminder:
+    def get_reminder(self, reminder_id: str) -> Union[Reminder, None]:
         """
         retrieve information about the reminder with the given id. None if an
         error occurred
@@ -57,7 +57,11 @@ class RemindersClient:
             headers=HEADERS,
         )
         if response.status == HTTP_OK:
-            reminder_dict = json.loads(content.decode("utf-8"))['1'][0]
+            content_dict = json.loads(content.decode('utf-8'))
+            if content_dict == {}:
+                print(f'Couldn\'t find reminder with id={reminder_id}')
+                return None
+            reminder_dict = content_dict['1'][0]
             return client_utils.build_reminder(reminder_dict=reminder_dict)
         else:
             self._report_error(response, content, 'get_reminder')
