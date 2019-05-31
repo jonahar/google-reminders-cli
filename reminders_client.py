@@ -91,7 +91,7 @@ class RemindersClient:
             headers=HEADERS,
         )
         if response.status == HTTP_OK:
-            content_dict = json.loads(content.decode("utf-8"))
+            content_dict = json.loads(content.decode('utf-8'))
             reminders_dict_list = content_dict['1']
             reminders = [
                 client_utils.build_reminder(reminder_dict)

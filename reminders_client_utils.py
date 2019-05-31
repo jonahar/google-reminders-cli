@@ -42,28 +42,28 @@ def create_req_body(reminder: Reminder) -> dict:
     returns the body of a create-reminder request
     """
     body = {
-        "2": {
-            "1": 7
+        '2': {
+            '1': 7
         },
-        "3": {
-            "2": reminder.id
+        '3': {
+            '2': reminder.id
         },
-        "4": {
-            "1": {
-                "2": reminder.id
+        '4': {
+            '1': {
+                '2': reminder.id
             },
-            "3": reminder.title,
-            "5": {
-                "1": reminder.dt.year,
-                "2": reminder.dt.month,
-                "3": reminder.dt.day,
-                "4": {
-                    "1": reminder.dt.hour,
-                    "2": reminder.dt.minute,
-                    "3": reminder.dt.second,
+            '3': reminder.title,
+            '5': {
+                '1': reminder.dt.year,
+                '2': reminder.dt.month,
+                '3': reminder.dt.day,
+                '4': {
+                    '1': reminder.dt.hour,
+                    '2': reminder.dt.minute,
+                    '3': reminder.dt.second,
                 }
             },
-            "8": 0
+            '8': 0
         }
     }
     return json.dumps(body)
@@ -92,8 +92,8 @@ def list_req_body(num_reminders: int):
     :param num_reminders: the number of reminders to retrieve
     """
     body = {
-        "5": 1,  # boolean field. 0 or 1
-        "6": num_reminders,  # number of reminders to retrieve
+        '5': 1,  # boolean field. 0 or 1
+        '6': num_reminders,  # number of reminders to retrieve
     }
     return json.dumps(body)
 
