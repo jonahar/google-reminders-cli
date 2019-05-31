@@ -1,7 +1,8 @@
-import httplib2
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
+
+import httplib2
 from oauth2client import tools
 from oauth2client.client import OAuth2WebServerFlow
 from oauth2client.file import Storage
@@ -85,16 +86,28 @@ def delete_req_body(reminder_id: str):
     return json.dumps(body)
 
 
-def list_req_body(num_reminders: int):
+def list_req_body(num_reminders: int, max_timestamp_msec: int = 0):
     """
-    returns the body of a list-reminders request
-    
-    :param num_reminders: the number of reminders to retrieve
+    returns the body of a list-reminders request.
+
+    The body corresponds to a request that retrieves a maximum of num_reminders
+    reminders, whose creation timestamp is less than max_timestamp_msec.
+    max_timestamp_msec is a unix timestamp in milliseconds. if its value is 0, treat
+    it as current time.
     """
     body = {
-        '5': 1,  # boolean field. 0 or 1
-        '6': num_reminders,  # number of reminders to retrieve
+        '5': 1,  # boolean field: 0 or 1. 0 doesn't work ¯\_(ツ)_/¯
+        '6': num_reminders,  # number number of reminders to retrieve
     }
+    
+    if max_timestamp_msec:
+        max_timestamp_msec += int(timedelta(hours=15).total_seconds() * 1000)
+        body['16'] = max_timestamp_msec
+        # Empirically, when requesting with a certain timestamp, reminders with the given
+        # timestamp or even a bit smaller timestamp are not returned. Therefore we increase
+        # the timestamp by 15 hours, which seems to solve this...  ~~voodoo~~
+        # (I wish Google had a normal API for reminders)
+    
     return json.dumps(body)
 
 
