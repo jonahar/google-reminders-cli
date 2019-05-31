@@ -122,10 +122,12 @@ def build_reminder(reminder_dict: dict):
         hour = r['5']['4']['1']
         minute = r['5']['4']['2']
         second = r['5']['4']['3']
+        creation_timestamp_msec = int(r['18'])
         
         return Reminder(
             title=title,
             dt=datetime(year, month, day, hour, minute, second),
+            creation_timestamp_msec=creation_timestamp_msec,
             id=id,
         )
     
