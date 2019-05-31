@@ -81,7 +81,7 @@ class RemindersClient:
     
     def list_reminders(self, num_reminders: int) -> List[Reminder]:
         """
-        returns a list of the last REMINDERS_LIST_MAX_LEN created reminders, or
+        returns a list of the last num_reminders created reminders, or
         None if an error occurred
         """
         response, content = self.auth_http.request(
@@ -92,6 +92,8 @@ class RemindersClient:
         )
         if response.status == HTTP_OK:
             content_dict = json.loads(content.decode('utf-8'))
+            if '1' not in content_dict:
+                return []
             reminders_dict_list = content_dict['1']
             reminders = [
                 client_utils.build_reminder(reminder_dict)
