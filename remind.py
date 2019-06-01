@@ -77,9 +77,13 @@ def invoke_operation(args):
     
     elif args.list:
         num_reminders = args.list
+        if num_reminders < 0:
+            print('argument to list command must be positive')
+            return
         reminders = client.list_reminders(num_reminders=num_reminders)
-        for r in sorted(reminders):
-            print(r)
+        if reminders is not None:
+            for r in sorted(reminders):
+                print(r)
     
     else:
         print('Wrong usage: no valid action was specified\n'
