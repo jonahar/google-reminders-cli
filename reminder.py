@@ -22,4 +22,5 @@ class Reminder:
         return self.dt < other.dt
     
     def __repr__(self):
-        return f'{self.dt}: "{self.title}"; id="{self.id}"'
+        format = '%Y-%m-%d %H:%M'
+        return f'{self.dt.strftime(format)}: {self.title} ; id="{self.id}"'
