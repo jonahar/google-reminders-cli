@@ -6,7 +6,7 @@ It allows creating, deleting and watching reminders
 ## Usage examples
 Creating reminder interactively:
 ```
-python3 remind.py -i
+$ python3 remind.py -i
 What's the reminder: Pay bills
 When do you want to be reminded: tomorrow at 4pm
 
