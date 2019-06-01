@@ -66,7 +66,7 @@ class RemindersClient:
         else:
             self._report_error(response, content, 'get_reminder')
     
-    def delete_reminder(self, reminder_id: str):
+    def delete_reminder(self, reminder_id: str) -> bool:
         """
         delete the reminder with the given id.
         Returns True upon a successful deletion
@@ -83,7 +83,7 @@ class RemindersClient:
             self._report_error(response, content, 'delete_reminder')
             return False
     
-    def list_reminders(self, num_reminders: int) -> List[Reminder]:
+    def list_reminders(self, num_reminders: int) -> Union[List[Reminder], None]:
         """
         returns a list of the last num_reminders created reminders, or
         None if an error occurred

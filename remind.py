@@ -59,15 +59,15 @@ def invoke_operation(args):
                 return
             reminder = Reminder(title=title, dt=dt)
         
-        if reminder:
+        if reminder is not None:
             if client.create_reminder(reminder):
-                print('Reminder set successfully')
+                print('Reminder set successfully:')
                 print(reminder)
     
     elif args.get:
         id = args.get
         reminder = client.get_reminder(reminder_id=id)
-        if reminder:
+        if reminder is not None:
             print(reminder)
     
     elif args.delete:
