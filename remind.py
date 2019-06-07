@@ -5,7 +5,7 @@ from typing import Union
 
 import dateparser
 
-from reminder import Reminder
+from reminder import Reminder, gen_id
 from reminders_client import RemindersClient
 
 # format is  "Fri, May 23 2019, 19:30"
@@ -40,7 +40,7 @@ def read_reminder_params() -> Union[Reminder, None]:
         print(f'\n"{title}" on {dt.strftime(DATE_FORMAT)}\n')
         save = read_yes_no('Do you want to save this?')
         if save:
-            return Reminder(title=title, dt=dt)
+            return Reminder(id=gen_id(), title=title, dt=dt)
 
 
 def invoke_operation(args):
@@ -57,7 +57,7 @@ def invoke_operation(args):
             dt = parse_time_str(time_str)
             if dt is None:
                 return
-            reminder = Reminder(title=title, dt=dt)
+            reminder = Reminder(id=gen_id(), title=title, dt=dt)
         
         if reminder is not None:
             if client.create_reminder(reminder):

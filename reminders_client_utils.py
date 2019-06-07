@@ -125,10 +125,10 @@ def build_reminder(reminder_dict: dict):
         creation_timestamp_msec = int(r['18'])
         
         return Reminder(
+            id=id,
             title=title,
             dt=datetime(year, month, day, hour, minute, second),
             creation_timestamp_msec=creation_timestamp_msec,
-            id=id,
         )
     
     except KeyError:
