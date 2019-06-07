@@ -17,6 +17,7 @@ class Reminder:
         title: str,
         dt: datetime,
         creation_timestamp_msec: int = None,
+        done: bool = False,
     ):
         if id is None:
             raise ValueError('Reminder id must not be None')
@@ -24,6 +25,7 @@ class Reminder:
         self.title = title
         self.dt = dt
         self.creation_timestamp_msec = creation_timestamp_msec
+        self.done = done
     
     def __lt__(self, other):
         return self.dt < other.dt

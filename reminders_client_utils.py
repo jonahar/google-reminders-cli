@@ -123,12 +123,14 @@ def build_reminder(reminder_dict: dict):
         minute = r['5']['4']['2']
         second = r['5']['4']['3']
         creation_timestamp_msec = int(r['18'])
+        done = '8' in r and r['8'] == 1
         
         return Reminder(
             id=id,
             title=title,
             dt=datetime(year, month, day, hour, minute, second),
             creation_timestamp_msec=creation_timestamp_msec,
+            done=done,
         )
     
     except KeyError:
