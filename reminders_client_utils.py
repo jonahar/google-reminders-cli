@@ -33,6 +33,7 @@ def authenticate() -> httplib2.Http:
                 scope=['https://www.googleapis.com/auth/reminders'],
                 user_agent='google reminders cli tool'),
             storage,
+            tools.argparser.parse_args([])
         )
     auth_http = credentials.authorize(httplib2.Http())
     return auth_http
