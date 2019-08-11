@@ -27,13 +27,14 @@ def authenticate() -> httplib2.Http:
     credentials = storage.get()
     if credentials is None or credentials.invalid:
         credentials = tools.run_flow(
-            OAuth2WebServerFlow(
+            flow=OAuth2WebServerFlow(
                 client_id=app_keys['APP_CLIENT_ID'],
                 client_secret=app_keys['APP_CLIENT_SECRET'],
                 scope=['https://www.googleapis.com/auth/reminders'],
-                user_agent='google reminders cli tool'),
-            storage,
-            tools.argparser.parse_args([])
+                user_agent='google reminders cli tool',
+            ),
+            storage=storage,
+            flags=tools.argparser.parse_args([]),
         )
     auth_http = credentials.authorize(httplib2.Http())
     return auth_http
