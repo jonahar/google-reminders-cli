@@ -9,7 +9,7 @@ from oauth2client.file import Storage
 
 from reminder import Reminder
 
-APP_KEYS_FILE = 'app_keys.json'
+APP_KEYS_FILE = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'app_keys.json')
 USER_OAUTH_DATA_FILE = os.path.expanduser('~/.google-reminders-cli-oauth')
 
 
