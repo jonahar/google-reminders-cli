@@ -1,6 +1,8 @@
 import functools
 import time
+from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
 
 
 def gen_id() -> str:
@@ -9,23 +11,14 @@ def gen_id() -> str:
     return f'cli-reminder-{time.time()}'
 
 
+@dataclass
 @functools.total_ordering
 class Reminder:
-    def __init__(
-        self,
-        id: str,
-        title: str,
-        dt: datetime,
-        creation_timestamp_msec: int = None,
-        done: bool = False,
-    ):
-        if id is None:
-            raise ValueError('Reminder id must not be None')
-        self.id = id
-        self.title = title
-        self.dt = dt
-        self.creation_timestamp_msec = creation_timestamp_msec
-        self.done = done
+    id: str
+    title: str
+    dt: datetime
+    creation_timestamp_msec: Optional[int] = None
+    done: bool = False
     
     def __repr_title(self):
         """
