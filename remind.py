@@ -16,10 +16,10 @@ DATE_FORMAT = '%a, %b %d %Y, %H:%M'
 
 def read_yes_no(prompt) -> bool:
     """
-    read yes no answer from the user. default (empty answer) is yes
+    read yes/no answer from the user
     """
-    ans = input(f'{prompt} [Y/n] ').lower()
-    return True if ans in ['', 'y', 'yes'] else False
+    ans = input(f'{prompt} [Y/n] ')
+    return ans.lower() in ['', 'y', 'yes']
 
 
 def parse_time_str(time_str: str) -> Union[datetime, None]:
@@ -52,6 +52,7 @@ def invoke_operation(args):
     client = RemindersClient()
     
     if args.interactive or args.create:
+        # prepare the reminder to create
         if args.interactive:
             reminder = read_reminder_params()
         else:
@@ -61,6 +62,7 @@ def invoke_operation(args):
                 return
             reminder = Reminder(id=gen_id(), title=title, dt=dt)
         
+        # execute creation if applicable
         if reminder is not None:
             if client.create_reminder(reminder):
                 print('Reminder set successfully:')
