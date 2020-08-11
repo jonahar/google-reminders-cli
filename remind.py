@@ -3,7 +3,7 @@
 import argparse
 import readline  # to enable navigating through entered text
 from datetime import datetime
-from typing import Union
+from typing import Optional
 
 import dateparser
 
@@ -22,7 +22,7 @@ def read_yes_no(prompt) -> bool:
     return ans.lower() in ['', 'y', 'yes']
 
 
-def parse_time_str(time_str: str) -> Union[datetime, None]:
+def parse_time_str(time_str: str) -> Optional[datetime]:
     dt = dateparser.parse(time_str)
     if dt is None:
         print('Unrecognizable time text. See help menu for legal formats')
@@ -30,7 +30,7 @@ def parse_time_str(time_str: str) -> Union[datetime, None]:
     return dt
 
 
-def read_reminder_params() -> Union[Reminder, None]:
+def read_reminder_params() -> Optional[Reminder]:
     """
     read parameters from the user and build a Reminder object.
     return a Reminder object, or None, meaning no action required (e.g. wrong

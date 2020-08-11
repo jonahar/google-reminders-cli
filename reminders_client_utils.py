@@ -1,6 +1,7 @@
 import json
 import os
 from datetime import datetime, timedelta
+from typing import Optional
 
 import httplib2
 from oauth2client import tools
@@ -40,7 +41,7 @@ def authenticate() -> httplib2.Http:
     return auth_http
 
 
-def create_req_body(reminder: Reminder) -> dict:
+def create_req_body(reminder: Reminder) -> str:
     """
     returns the body of a create-reminder request
     """
@@ -72,7 +73,7 @@ def create_req_body(reminder: Reminder) -> dict:
     return json.dumps(body)
 
 
-def get_req_body(reminder_id: str):
+def get_req_body(reminder_id: str) -> str:
     """
     returns the body of a get-reminder request
     """
@@ -80,7 +81,7 @@ def get_req_body(reminder_id: str):
     return json.dumps(body)
 
 
-def delete_req_body(reminder_id: str):
+def delete_req_body(reminder_id: str) -> str:
     """
     returns the body of a delete-reminder request
     """
@@ -88,7 +89,7 @@ def delete_req_body(reminder_id: str):
     return json.dumps(body)
 
 
-def list_req_body(num_reminders: int, max_timestamp_msec: int = 0):
+def list_req_body(num_reminders: int, max_timestamp_msec: int = 0) -> str:
     """
     returns the body of a list-reminders request.
 
@@ -113,7 +114,7 @@ def list_req_body(num_reminders: int, max_timestamp_msec: int = 0):
     return json.dumps(body)
 
 
-def build_reminder(reminder_dict: dict):
+def build_reminder(reminder_dict: dict) -> Optional[Reminder]:
     r = reminder_dict
     try:
         id = r['1']['2']

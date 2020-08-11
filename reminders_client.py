@@ -1,5 +1,5 @@
 import json
-from typing import List, Union
+from typing import List, Optional
 
 import reminders_client_utils as client_utils
 from reminder import Reminder
@@ -45,7 +45,7 @@ class RemindersClient:
             self._report_error(response, content, 'create_reminder')
             return False
     
-    def get_reminder(self, reminder_id: str) -> Union[Reminder, None]:
+    def get_reminder(self, reminder_id: str) -> Optional[Reminder]:
         """
         retrieve information about the reminder with the given id. None if an
         error occurred
@@ -83,7 +83,7 @@ class RemindersClient:
             self._report_error(response, content, 'delete_reminder')
             return False
     
-    def list_reminders(self, num_reminders: int) -> Union[List[Reminder], None]:
+    def list_reminders(self, num_reminders: int) -> Optional[List[Reminder]]:
         """
         returns a list of the last num_reminders created reminders, or
         None if an error occurred
