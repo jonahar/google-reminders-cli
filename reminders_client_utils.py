@@ -122,9 +122,15 @@ def build_reminder(reminder_dict: dict) -> Optional[Reminder]:
         year = r['5']['1']
         month = r['5']['2']
         day = r['5']['3']
-        hour = r['5']['4']['1']
-        minute = r['5']['4']['2']
-        second = r['5']['4']['3']
+        if '4' in r['5']:
+            hour = r['5']['4']['1']
+            minute = r['5']['4']['2']
+            second = r['5']['4']['3']
+        else:
+            hour = 0
+            minute = 0
+            second = 0
+
         creation_timestamp_msec = int(r['18'])
         done = '8' in r and r['8'] == 1
         
