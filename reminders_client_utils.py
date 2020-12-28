@@ -73,6 +73,45 @@ def create_req_body(reminder: Reminder) -> str:
     return json.dumps(body)
 
 
+def update_req_body(reminder: Reminder) -> str:
+    """
+    returns the body of a update-reminder request
+    """
+    body = {
+        '2': {
+            '2': reminder.id
+        },
+        '4': {
+            '1': {
+                '2': reminder.id
+            },
+            '3': reminder.title,
+            '5': {
+                '1': reminder.dt.year,
+                '2': reminder.dt.month,
+                '3': reminder.dt.day,
+                '4': {
+                    '1': reminder.dt.hour,
+                    '2': reminder.dt.minute,
+                    '3': reminder.dt.second,
+                },
+                '9': 1 if reminder.all_day else 0,
+            },
+            '8': 1 if reminder.done else 0,
+            '11': str(int(datetime.utcnow().timestamp() * 1000)),
+            '18': str(reminder.creation_timestamp_msec)
+        },
+        '7': {
+            '1': [
+                0,
+                1,
+                3,
+                10,
+            ]},
+    }
+    return json.dumps(body)
+
+
 def get_req_body(reminder_id: str) -> str:
     """
     returns the body of a get-reminder request
@@ -119,29 +158,42 @@ def build_reminder(reminder_dict: dict) -> Optional[Reminder]:
     try:
         id = r['1']['2']
         title = r['3']
-        year = r['5']['1']
-        month = r['5']['2']
-        day = r['5']['3']
-        if '4' in r['5']:
-            hour = r['5']['4']['1']
-            minute = r['5']['4']['2']
-            second = r['5']['4']['3']
+        if '5' in r:
+            year = r['5']['1']
+            month = r['5']['2']
+            day = r['5']['3']
+            if '4' in r['5']:
+                hour = r['5']['4']['1']
+                minute = r['5']['4']['2']
+                second = r['5']['4']['3']
+            else:
+                hour = 0
+                minute = 0
+                second = 0
+            all_day = '9' in r['5'] and r['5']['9'] == 1
         else:
+            now = datetime.now()
+            year = now.year
+            month = now.month
+            day = now.day
             hour = 0
             minute = 0
             second = 0
 
         creation_timestamp_msec = int(r['18'])
+        done_timestamp_msec = int(r['11']) if '11' in r else None
         done = '8' in r and r['8'] == 1
-        
+
         return Reminder(
             id=id,
             title=title,
             dt=datetime(year, month, day, hour, minute, second),
             creation_timestamp_msec=creation_timestamp_msec,
+            done_timestamp_msec=done_timestamp_msec,
             done=done,
+            all_day = all_day
         )
-    
+
     except KeyError:
         print('build_reminder failed: unrecognized reminder dictionary format')
         return None

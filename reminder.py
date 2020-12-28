@@ -18,7 +18,9 @@ class Reminder:
     title: str
     dt: datetime
     creation_timestamp_msec: Optional[int] = None
+    done_timestamp_msec: Optional[int] = None
     done: bool = False
+    all_day: bool = False
     
     def __repr_title(self):
         """
