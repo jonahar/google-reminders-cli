@@ -85,6 +85,7 @@ def invoke_operation(args):
             print('argument to list command must be positive')
             return
         reminders = client.list_reminders(num_reminders=num_reminders)
+        reminders = filter(None, reminders)
         if reminders is not None:
             for r in sorted(reminders):
                 print(r)

@@ -8,7 +8,8 @@ URIs = {
     'create': 'https://reminders-pa.clients6.google.com/v1internalOP/reminders/create',
     'delete': 'https://reminders-pa.clients6.google.com/v1internalOP/reminders/delete',
     'get': 'https://reminders-pa.clients6.google.com/v1internalOP/reminders/get',
-    'list': 'https://reminders-pa.clients6.google.com/v1internalOP/reminders/list'
+    'list': 'https://reminders-pa.clients6.google.com/v1internalOP/reminders/list',
+    'update': 'https://reminders-pa.clients6.google.com/v1internalOP/reminders/update'
 }
 
 HEADERS = {
@@ -44,7 +45,24 @@ class RemindersClient:
         else:
             self._report_error(response, content, 'create_reminder')
             return False
-    
+
+    def update_reminder(self, reminder: Reminder) -> bool:
+        """
+        send a 'update reminder' request.
+        returns True upon a successful update of a reminder
+        """
+        response, content = self.auth_http.request(
+            uri=URIs['update'],
+            method='POST',
+            body=client_utils.update_req_body(reminder),
+            headers=HEADERS,
+        )
+        if response.status == HTTP_OK:
+            return True
+        else:
+            self._report_error(response, content, 'update_reminder')
+            return False
+
     def get_reminder(self, reminder_id: str) -> Optional[Reminder]:
         """
         retrieve information about the reminder with the given id. None if an
