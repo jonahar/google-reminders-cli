@@ -33,6 +33,13 @@ Reminder set successfully:
 2019-06-02 17:45: Pay bills ; id="cli-reminder-1559389443.0839736"
 ```
 
+## API keys
+In order to use google-reminders-cli you must first get an app keys and place
+them in the `app_keys.json` file so you can access Google's API.  
+google-reminders-cli uses **OAuth 2.0 Client IDs**.
+Start a project and get your own keys in https://console.developers.google.com.
+
+---
 
 **Disclaimer**: Currently there is no official API for _Google Reminders_, so instead, 
 this tool imitates a browser request. This may cause google-reminders-cli to stop 
